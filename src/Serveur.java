@@ -127,15 +127,6 @@ public class Serveur {
                         sendPacket(dpr, sender, "NOT_EMPTY");
                     } else {
                         cases[x][y] = joueurCourant == 0 ? 'X' : 'O';
-                        int isVictory = isVictory();
-                        if (isVictory != -1) {
-                            sendPacket(joueurs[0].address, joueurs[0].port,
-                                    "0", "VICTORY " + isVictory);
-                            sendPacket(joueurs[1].address, joueurs[1].port,
-                                    "1", "VICTORY " + isVictory);
-                            return true;
-                        }
-
                         joueurCourant = joueurCourant == 0 ? 1 : 0;
 
                         //sync
@@ -154,6 +145,15 @@ public class Serveur {
                                 "0", builder.toString());
                         sendPacket(joueurs[1].address, joueurs[1].port,
                                 "1", builder.toString());
+
+                        int isVictory = isVictory();
+                        if (isVictory != -1) {
+                            sendPacket(joueurs[0].address, joueurs[0].port,
+                                    "0", "VICTORY " + isVictory);
+                            sendPacket(joueurs[1].address, joueurs[1].port,
+                                    "1", "VICTORY " + isVictory);
+                            return true;
+                        }
 
                         sendPacket(joueurs[joueurCourant].address,
                                 joueurs[joueurCourant].port,
