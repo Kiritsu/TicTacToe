@@ -129,10 +129,13 @@ public class Serveur {
                         cases[x][y] = joueurCourant == 0 ? 'X' : 'O';
                         int isVictory = isVictory();
                         if (isVictory != -1) {
-                            sendPacket(joueurs[0].address, joueurs[0].port, "0", "VICTORY " + isVictory);
-                            sendPacket(joueurs[1].address, joueurs[1].port, "1", "VICTORY " + isVictory);
+                            sendPacket(joueurs[0].address, joueurs[0].port,
+                                    "0", "VICTORY " + isVictory);
+                            sendPacket(joueurs[1].address, joueurs[1].port,
+                                    "1", "VICTORY " + isVictory);
                             return true;
                         }
+
                         joueurCourant = joueurCourant == 0 ? 1 : 0;
 
                         //sync
@@ -147,16 +150,28 @@ public class Serveur {
                         }
                         builder.deleteCharAt(builder.length() - 1);
 
-                        sendPacket(joueurs[0].address, joueurs[0].port, "0", builder.toString());
-                        sendPacket(joueurs[1].address, joueurs[1].port, "1", builder.toString());
+                        sendPacket(joueurs[0].address, joueurs[0].port,
+                                "0", builder.toString());
+                        sendPacket(joueurs[1].address, joueurs[1].port,
+                                "1", builder.toString());
 
-                        sendPacket(joueurs[joueurCourant].address, joueurs[joueurCourant].port,
+                        sendPacket(joueurs[joueurCourant].address,
+                                joueurs[joueurCourant].port,
                                 Integer.toString(joueurCourant), "TURN");
-                        sendPacket(joueurs[joueurCourant == 0 ? 1 : 0].address, joueurs[joueurCourant == 0 ? 1 : 0].port,
+
+                        sendPacket(joueurs[joueurCourant == 0 ? 1 : 0].address,
+                                joueurs[joueurCourant == 0 ? 1 : 0].port,
                                 Integer.toString(joueurCourant == 0 ? 1 : 0), "NOT_YOUR_TURN");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+
+                    sendPacket(joueurs[joueurCourant].address,
+                            joueurs[joueurCourant].port,
+                            Integer.toString(joueurCourant), "TURN");
+                    sendPacket(joueurs[joueurCourant == 0 ? 1 : 0].address,
+                            joueurs[joueurCourant == 0 ? 1 : 0].port,
+                            Integer.toString(joueurCourant == 0 ? 1 : 0), "NOT_YOUR_TURN");
                 }
 
                 break;
@@ -199,6 +214,19 @@ public class Serveur {
             if (cases[1][1] != '\0') {
                 return cases[1][1] == '0' ? 1 : 0;
             }
+        }
+
+        int nbEmpty = 0;
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (cases[i][j] == '\0') {
+                    nbEmpty++;
+                }
+            }
+        }
+
+        if (nbEmpty == 0) {
+            return -2;
         }
 
         return -1;

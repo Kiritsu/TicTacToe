@@ -158,6 +158,11 @@ public class Client {
                 break;
             case "VICTORY":
                 int winner = Integer.parseInt(params[0]);
+                if (winner == -2) {
+                    System.out.println("Nobody won...");
+                    return true;
+                }
+
                 System.out.println(winner == playerId ? "You won!" : "You lose... :(");
                 return true;
             case "TOO_MANY_PLAYERS":
